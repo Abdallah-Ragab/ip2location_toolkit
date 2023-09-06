@@ -32,10 +32,10 @@ def download_file(url, path):
         if r.status_code == 404:
             print('   Error downloading {}: Database Not Found.'.format(Fore.RED + path.split('/')[-1] + Fore.RESET))
             return False
-        if r.content == 'THIS FILE CAN ONLY BE DOWNLOADED 5 TIMES PER HOUR':
+        if r.text.startswith('THIS FILE CAN ONLY BE DOWNLOADED'):
             print('   Error downloading {}: Download Limit Exceeded.\n Please try again later.'.format(Fore.RED + path.split('/')[-1] + Fore.RESET))
             return False
-        if r.content == 'NO PERMISSION':
+        if r.text == 'NO PERMISSION':
             print('   Error downloading {}: Permission Denied.\n Make sure the TOKEN is correct and you have permission to download this database.'.format(Fore.RED + path.split('/')[-1] + Fore.RESET))
             return False
         with open(path, 'wb') as f:
