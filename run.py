@@ -1,7 +1,5 @@
-from ip2location_toolkit.db_selector import select_db
+from ip2location_toolkit import cli_select_db
 
 if __name__ == '__main__':
-    db_code = select_db()
-    print('Downloading database [{}]...'.format(db_code))
-
+    cli_select_db()
 
