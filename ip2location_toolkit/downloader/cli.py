@@ -4,7 +4,7 @@ from .download import download_extract_db
 
 
 def db_code_prompt(enable_select):
-    from ..db_selector import DB_CODES
+    from ..selector import DB_CODES
 
     all_db_codes = list(chain.from_iterable(
         (i['ipv4']['cvs'], i['ipv4']['bin'], i['ipv6']['cvs'], i['ipv6']['bin'])

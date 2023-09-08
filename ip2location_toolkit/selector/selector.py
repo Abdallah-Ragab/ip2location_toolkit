@@ -1,6 +1,6 @@
 import os
 from .db_codes import CODES
-from ..db_downloader import cli_download_db
+from ..downloader import cli_download_db
 
 def clear_output():
     try :
