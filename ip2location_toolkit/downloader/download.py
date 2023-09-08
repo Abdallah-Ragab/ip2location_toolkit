@@ -1,10 +1,11 @@
-import os, sys, requests
+import os, requests
 from pathlib import Path
 from tqdm import tqdm
 from colorama import Fore
 from zipfile import ZipFile
 from ..exceptions import DataBaseNotFound, DownloadLimitExceeded, DownloadPermissionDenied
 from ..validators import token_validator, db_code_validator, path_validator
+
 
 def get_dir_or_create(path):
     """
@@ -28,22 +29,50 @@ def get_downloaded_zip_path(file_code):
     file_path  = '/'.join([tmp_path, "{filename}.zip".format(filename=file_code)])
     return file_path
 
+# def download_file(url, path):
+#     # TODO fix progress bar
+#     with requests.get(url, stream=True) as request:
+
+#         file_length = int(request.headers.get('content-length', 1000000))
+#         print('   File size: {} MB'.format(file_length / 1000000))
+#         chunk_size = int(file_length / 100)
+#         tqdm_bar = tqdm(unit='B', unit_scale=True, desc="   " + path.split('/')[-1], total=file_length)
+
+#         if request.status_code == 404:
+#             raise DataBaseNotFound
+#         if request.text.startswith('THIS FILE CAN ONLY BE DOWNLOADED'):
+#             raise DownloadLimitExceeded
+#         if request.text == 'NO PERMISSION':
+#             raise DownloadPermissionDenied
+
+
+#         with open(path, 'wb') as file:
+#             for chunk in request.iter_content(chunk_size=chunk_size):
+#                 tqdm_bar.update(len(chunk))
+#                 file.write(chunk)
+#     return path
 def download_file(url, path):
-    # TODO fix progress bar
-    chunk_size = 8192
-    with requests.get(url, stream=True) as r:
-        if r.status_code == 404:
+    request = requests.get(url, stream=True)
+    file_length = int(request.headers.get('content-length', 0))
+    chunk_size = min(int(file_length / 100), 500000)
+    print('   File size: {} MB'.format(format(file_length / 1000000, '.2f')))
+
+    if file_length < 100000:
+        if request.status_code == 404:
             raise DataBaseNotFound
-        if r.text.startswith('THIS FILE CAN ONLY BE DOWNLOADED'):
+        if request.text.startswith('THIS FILE CAN ONLY BE DOWNLOADED'):
             raise DownloadLimitExceeded
-        if r.text == 'NO PERMISSION':
+        if request.text == 'NO PERMISSION':
             raise DownloadPermissionDenied
 
-        tqdm_bar = tqdm(unit='B', unit_scale=True, desc="   " + path.split('/')[-1], total=int(r.headers.get('content-length', 0)))
-        with open(path, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=chunk_size):
-                tqdm_bar.update(chunk_size)
-                f.write(chunk)
+    tqdm_bar = tqdm(unit='B', unit_scale=True, desc="   " + path.split('/')[-1], total=file_length)
+
+    with open(path, 'wb') as file:
+        for chunk in request.iter_content(chunk_size=chunk_size):
+            tqdm_bar.update(len(chunk))
+            file.write(chunk)
+
+
     return path
 
 def download_database(file_code, token=None):
