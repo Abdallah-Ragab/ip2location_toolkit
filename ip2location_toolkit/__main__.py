@@ -9,7 +9,6 @@ def main():
     parser.add_argument('--token', '-t', help='Your IP2Location API Token')
     parser.add_argument('--code', '-c', help='Database code to download')
     parser.add_argument('--output', '-o', help='Output directory')
-    # parser.add_argument('--help', '-h', help='Show this help message', action='help')
     args = parser.parse_args()
 
     if args.code:

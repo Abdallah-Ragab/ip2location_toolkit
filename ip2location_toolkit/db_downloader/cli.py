@@ -1,6 +1,6 @@
 import os
 from itertools import chain
-from .download import download_db
+from .download import download_extract_db
 
 
 def db_code_prompt(enable_select):
@@ -58,4 +58,4 @@ def cli_download_db(db_code = None, token = None, output = None, enable_select =
         token = token_prompt()
     if not output:
         output = output_prompt()
-    download_db(db_code, token, output)
+    download_extract_db(db_code, token, output)
