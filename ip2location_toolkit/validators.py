@@ -12,22 +12,22 @@ def get_all_db_codes():
 print (get_all_db_codes())
 
 
-def path_validator(path):
-    if not path:
+def path_validator(path, required=True):
+    if not path and required:
         raise ValueError('Output path is required.')
     if not os.path.exists(path):
         raise ValueError('Output path does not exist.')
     return path
 
-def token_validator(token):
-    if not token:
+def token_validator(token, required=True):
+    if not token and required:
         raise ValueError('The IP2LOCATION token is required. please sign up at https://www.ip2location.com/register to obtain your token.')
     if len(token) != 64:
         raise ValueError('The IP2LOCATION token is invalid. please sign up at https://www.ip2location.com/register to obtain your token.')
     return token
 
-def db_code_validator(db_code):
-    if not db_code:
+def db_code_validator(db_code, required=True):
+    if not db_code and required:
         raise ValueError('The IP2LOCATION database code is required.')
     if db_code not in get_all_db_codes():
         raise ValueError('The IP2LOCATION database code is invalid. Please make sure you have the correct database code.')

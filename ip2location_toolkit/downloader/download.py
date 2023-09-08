@@ -4,6 +4,7 @@ from tqdm import tqdm
 from colorama import Fore
 from zipfile import ZipFile
 from ..exceptions import DataBaseNotFound, DownloadLimitExceeded, DownloadPermissionDenied
+from ..validators import token_validator, db_code_validator, path_validator
 
 def get_dir_or_create(path):
     """
@@ -22,8 +23,13 @@ def get_tmp_dir():
     full_path = os.path.join(os.path.dirname(__file__), 'tmp')
     return get_dir_or_create(full_path)
 
+def get_downloaded_zip_path(file_code):
+    tmp_path = get_tmp_dir()
+    file_path  = '/'.join([tmp_path, "{filename}.zip".format(filename=file_code)])
+    return file_path
 
 def download_file(url, path):
+    # TODO fix progress bar
     chunk_size = 8192
     with requests.get(url, stream=True) as r:
         if r.status_code == 404:
@@ -40,17 +46,15 @@ def download_file(url, path):
                 f.write(chunk)
     return path
 
-def get_zip_path(file_code):
-    tmp_path = get_tmp_dir()
-    file_path  = '/'.join([tmp_path, "{filename}.zip".format(filename=file_code)])
-    return file_path
-
 def download_database(file_code, token=None):
-    if not token:
-        raise ValueError('TOKEN is required.')
+    try:
+        token_validator(token)
+    except Exception as e:
+        print('Failed to download database. {}'.format(e.message))
+        return
 
     url = "https://www.ip2location.com/download?token={}&file={}".format(token, file_code)
-    file_path = get_zip_path(file_code)
+    file_path = get_downloaded_zip_path(file_code)
     print('Downloading {}...'.format(Fore.BLUE + file_code + Fore.RESET))
 
     try:
@@ -78,13 +82,16 @@ def unzip_db(file_path, output_path=None):
 
     print('   Extracted {} into {}'.format(Fore.GREEN + f + Fore.RESET, Fore.GREEN + output_path + Fore.RESET))
     return output_path + '/' + f
+
 def download_extract_db(db_code, token=None, output_path=None):
-    if not token:
-        raise ValueError('TOKEN is required.')
-    """
-    This function downloads and extract the database with the given code.
-    @param db_code The database code.
-    """
+    try :
+        token_validator(token)
+        db_code_validator(db_code)
+        path_validator(output_path, required=False)
+    except Exception as e:
+        print('Failed to download database. {}'.format(e.message))
+        return
+
     file_path = download_database(db_code, token)
     if not file_path:
         return

@@ -40,7 +40,7 @@ def map_input_to_options(options: list):
         })
     return selections
 
-def process_input(selections: list, selection_title: str):
+def process_selection_input(selections: list, selection_title: str):
     _input = input('Please select a {title}: '.format(title=selection_title))
     try:
         _input = int(_input)
@@ -49,18 +49,18 @@ def process_input(selections: list, selection_title: str):
             raise ValueError
     except (ValueError, IndexError):
         print('Please enter a valid number from the list. \n')
-        return process_input(selections, selection_title)
+        return process_selection_input(selections, selection_title)
     return selection
 
-def run_selection(selections: list, selection_title: str):
+def prompt_selection(selections: list, selection_title: str):
     print(f'SELECT {selection_title}:')
     for selection in selections:
         print("   " + selection['prompt'].upper())
-    return process_input(selections, selection_title)
+    return process_selection_input(selections, selection_title)
 
 def selection_input(title: str, options: list):
     selections = map_input_to_options(options)
-    return run_selection(selections, title)
+    return prompt_selection(selections, title)
 
 def get_code(db_type: str, db_content: str, ip_type: str, db_format: str):
     db_content_index = [idx for idx, db in enumerate(CODES[db_type]) if db['title'] == db_content][0]
