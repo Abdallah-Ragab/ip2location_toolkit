@@ -50,7 +50,7 @@ def download_database(file_code, token=None):
     try:
         token_validator(token)
     except Exception as e:
-        print('Failed to download database. {}'.format(e.message))
+        print('Failed to download database. {}'.format(getattr(e, 'message', e)))
         return
 
     url = "https://www.ip2location.com/download?token={}&file={}".format(token, file_code)
@@ -60,7 +60,7 @@ def download_database(file_code, token=None):
     try:
         file = download_file(url, file_path)
     except Exception as e:
-        print('   Error downloading {}. \n   {}'.format(Fore.RED + file_code + Fore.RESET, e.message))
+        print('   Error downloading {}. \n   {}'.format(Fore.RED + file_code + Fore.RESET, getattr(e, 'message', e)))
         return
 
     print('   Downloaded {}.'.format( Fore.GREEN + file_code + Fore.RESET))
@@ -89,7 +89,7 @@ def download_extract_db(db_code, token=None, output_path=None):
         db_code_validator(db_code)
         path_validator(output_path, required=False)
     except Exception as e:
-        print('Failed to download database. {}'.format(e.message))
+        print('Failed to download database. {}'.format(getattr(e, 'message', e)))
         return
 
     file_path = download_database(db_code, token)

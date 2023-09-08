@@ -1,6 +1,6 @@
-from . import cli_download_db
 import argparse
 from pathlib import Path
+from .cli import download
 
 def main():
     """
@@ -27,7 +27,7 @@ def main():
     else:
         token = None
 
-    cli_download_db(db_code, token, output_path)
+    download(db_code, token, output_path)
 
 if __name__ == '__main__':
     main()

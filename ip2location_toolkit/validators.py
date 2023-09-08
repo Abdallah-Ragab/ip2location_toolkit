@@ -9,13 +9,11 @@ def get_all_db_codes():
             for db_type in ['cvs', 'bin']:
                 all_db_codes.append(db[ip_type][db_type])
     return all_db_codes
-print (get_all_db_codes())
-
 
 def path_validator(path, required=True):
-    if not path and required:
+    if not str(path).strip() and required:
         raise ValueError('Output path is required.')
-    if not os.path.exists(path):
+    if not os.path.exists(path) and str(path).strip():
         raise ValueError('Output path does not exist.')
     return path
 
