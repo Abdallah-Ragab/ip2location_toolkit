@@ -85,8 +85,7 @@ def unzip_db(file_path, output_path=None):
         raise e
 
     if not output_path:
-        output_path = Path.cwd()
-    print(Path.cwd())
+        output_path = os.path.abspath(Path.cwd())
 
     print('   Extracted {} into {}'.format(Fore.GREEN + f + Fore.RESET, Fore.GREEN + output_path + Fore.RESET))
     return output_path + '/' + f

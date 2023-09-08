@@ -1,5 +1,5 @@
 import os
-from .codes import CODES
+from .db_codes import CODES
 from ..db_downloader import cli_download_db
 
 def clear_output():

@@ -1,5 +1,6 @@
 from . import cli_download_db
 import argparse
+from pathlib import Path
 
 def main():
     """
@@ -8,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description='IP2Location Toolkit: A CLI tool to download IP2Location databases.')
     parser.add_argument('--token', '-t', help='Your IP2Location API Token')
     parser.add_argument('--code', '-c', help='Database code to download')
-    parser.add_argument('--output', '-o', help='Output directory')
+    parser.add_argument('--output', '-o', help='Output directory', type=Path)
     args = parser.parse_args()
 
     if args.code:
