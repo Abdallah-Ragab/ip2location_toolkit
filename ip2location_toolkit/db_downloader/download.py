@@ -53,7 +53,6 @@ def download_zip_db(file_code, token=None):
     if not token:
         raise ValueError('TOKEN is required.')
     url = "https://www.ip2location.com/download?token={}&file={}".format(token, file_code)
-    print(url)
     file_path = get_zip_path(file_code)
     print('Downloading {}...'.format(Fore.BLUE + file_code + Fore.RESET))
     try:
