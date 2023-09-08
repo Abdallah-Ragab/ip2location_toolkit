@@ -5,7 +5,6 @@ from colorama import Fore
 from zipfile import ZipFile
 
 
-# class DownloadError(Exception):
 
 class DataBaseNotFound(Exception):
     message = 'The database you are trying to download does not exist on IP2LOCATION.'
