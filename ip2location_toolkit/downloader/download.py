@@ -21,36 +21,14 @@ def get_tmp_dir():
     This function returns the path to the temporary directory.
     @return The path to the temporary directory.
     """
-    full_path = os.path.join(os.path.dirname(__file__), 'tmp')
+    full_path = os.path.join(os.getcwd(), 'tmp')
     return get_dir_or_create(full_path)
 
 def get_downloaded_zip_path(file_code):
     tmp_path = get_tmp_dir()
-    file_path  = '/'.join([tmp_path, "{filename}.zip".format(filename=file_code)])
+    file_path  = os.path.join(tmp_path, "{filename}.zip".format(filename=file_code))
     return file_path
 
-# def download_file(url, path):
-#     # TODO fix progress bar
-#     with requests.get(url, stream=True) as request:
-
-#         file_length = int(request.headers.get('content-length', 1000000))
-#         print('   File size: {} MB'.format(file_length / 1000000))
-#         chunk_size = int(file_length / 100)
-#         tqdm_bar = tqdm(unit='B', unit_scale=True, desc="   " + path.split('/')[-1], total=file_length)
-
-#         if request.status_code == 404:
-#             raise DataBaseNotFound
-#         if request.text.startswith('THIS FILE CAN ONLY BE DOWNLOADED'):
-#             raise DownloadLimitExceeded
-#         if request.text == 'NO PERMISSION':
-#             raise DownloadPermissionDenied
-
-
-#         with open(path, 'wb') as file:
-#             for chunk in request.iter_content(chunk_size=chunk_size):
-#                 tqdm_bar.update(len(chunk))
-#                 file.write(chunk)
-#     return path
 def download_file(url, path):
     request = requests.get(url, stream=True)
     file_length = int(request.headers.get('content-length', 0))
