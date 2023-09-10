@@ -75,7 +75,7 @@ class TestDownloadFile(SilentTestCases):
 class TestDownloadDatabase(SilentTestCases):
 
     def test_invalid_token(self):
-        self.assertIsNone(download_database('DB1LITEBIN', '15154454'), msg="Expected None to be returned for invalid token.")
+        self.assertIsNone(download_database('DB1LITEBIN', INVALID_TOKEN_LONG), msg="Expected None to be returned for invalid token.")
 
     @patch('ip2location_toolkit.downloader.download.download_file', return_value='test.zip')
     def test_download_database(self, mocker):
