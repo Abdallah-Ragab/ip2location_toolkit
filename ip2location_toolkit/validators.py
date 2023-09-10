@@ -12,6 +12,12 @@ def get_all_db_codes():
     return all_db_codes
 
 def path_validator(path, required=True):
+    """
+    Validate the given path.
+    @param path - the path to be validated
+    @param required - whether the path is required or not (default is True)
+    @raises ValueError if the path is None and required is True, or if the path is not a string, or if the path is empty and required is True, or if the path does not exist.
+    """
     original_path = path
 
     if path is None:
@@ -35,6 +41,12 @@ def path_validator(path, required=True):
     return original_path
 
 def token_validator(token):
+    """
+    Validate the IP2LOCATION token provided.
+    @param token - the IP2LOCATION token to validate
+    @raises ValueError if the token is empty or not 64 characters long
+    @return the validated token
+    """
     if not bool(str(token).strip()):
         raise ValueError('The IP2LOCATION token is required. please sign up at https://www.ip2location.com/register to obtain your token.')
     if len(token) != 64:
@@ -42,6 +54,12 @@ def token_validator(token):
     return token
 
 def db_code_validator(db_code):
+    """
+    Validate the IP2LOCATION database code provided.
+    @param db_code - the IP2LOCATION database code
+    @raises ValueError if the database code is empty or invalid
+    @return the validated database code
+    """
     if not bool(str(db_code).strip()):
         raise ValueError('The IP2LOCATION database code is required.')
     if db_code not in get_all_db_codes():

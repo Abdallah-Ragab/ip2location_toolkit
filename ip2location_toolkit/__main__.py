@@ -4,7 +4,7 @@ from .cli import download
 
 def main():
     """
-    The main function of the IP2Location Toolkit. The interface for the cli tool.
+    The main function of the IP2Location Toolkit CLI tool. It parses command line arguments using the argparse module and then calls the download function with the provided arguments.
     """
     parser = argparse.ArgumentParser(description='IP2Location Toolkit: A CLI tool to download IP2Location databases.')
     parser.add_argument('--token', '-t', help='Your IP2Location API Token')

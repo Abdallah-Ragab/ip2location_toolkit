@@ -5,6 +5,18 @@ from .db_codes import CODES
 
 
 def download(db_code = None, token = None, output = None, enable_select = True):
+    """
+    Downloads the IP2Location database file using the specified database code and token.
+
+    Args:
+        db_code (str): The database code to download. If not provided, the user will be prompted to select a database.
+        token (str): The token to use for authentication. If not provided, the user will be prompted to enter a token.
+        output (str): The output file path to save the downloaded database file. If not provided, the user will be prompted to enter a file path.
+        enable_select (bool): Whether to enable the database selection prompt. Defaults to True.
+
+    Returns:
+        None
+    """
     if not db_code:
         db_code = db_code_prompt(enable_select)
     if not token:
@@ -15,7 +27,13 @@ def download(db_code = None, token = None, output = None, enable_select = True):
 
 
 def select(enable_download = True):
-
+    """
+    This function prompts the user to select a database type, content, IP type, and database format.
+    It then retrieves the corresponding code for the selected options and prompts the user to download it.
+    If the user chooses to download the code, it calls the download function with the code as an argument.
+    @param enable_download - A boolean value indicating whether to prompt the user to download the code or not. Default is True.
+    @return The database code for the selected options.
+    """
     db_type_options = CODES.keys()
     db_type = selection_input('Database Type', db_type_options)
 
