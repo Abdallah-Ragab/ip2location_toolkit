@@ -1,4 +1,5 @@
 import os
+from pathlib import WindowsPath
 from .db_codes import CODES
 
 def get_all_db_codes():
@@ -11,14 +12,27 @@ def get_all_db_codes():
     return all_db_codes
 
 def path_validator(path, required=True):
-    path_empty = not bool(str(path).strip())
-    if path_empty:
+    original_path = path
+
+    if path is None:
         if required:
             raise ValueError('Output path is required.')
+        return None
+
+    try:
+        path = str(path)
+    except Exception as e:
+        raise ValueError('Output path must be a string. you provided {}'.format(type(path)))
+
+
+    if not bool(str(path).strip()):
+        if required:
+            raise ValueError('Output path is required.')
+
     else:
         if not os.path.exists(path):
             raise ValueError('Output path does not exist.')
-    return path
+    return original_path
 
 def token_validator(token):
     if not bool(str(token).strip()):

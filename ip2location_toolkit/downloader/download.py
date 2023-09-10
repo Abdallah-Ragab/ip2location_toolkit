@@ -76,8 +76,8 @@ def download_database(file_code, token=None):
 def unzip_db(file_path, output_path=None):
     try:
         with ZipFile(file_path, 'r') as zip_ref:
-            to_extract = [f for f in zip_ref.namelist() if f.endswith('.BIN') or f.endswith('.CSV')]
-            for f in to_extract:
+            extract_list = [f for f in zip_ref.namelist() if f.upper().endswith('.BIN') or f.upper().endswith('.CSV')]
+            for f in extract_list:
                 print('   Extracting {}...'.format(Fore.BLUE + f + Fore.RESET))
                 zip_ref.extract(f, output_path)
     except Exception as e:
@@ -87,8 +87,9 @@ def unzip_db(file_path, output_path=None):
     if not output_path:
         output_path = os.path.abspath(Path.cwd())
 
-    print('   Extracted {} into {}'.format(Fore.GREEN + f + Fore.RESET, Fore.GREEN + output_path + Fore.RESET))
-    return output_path + '/' + f
+    extracted_file_path = os.path.join(output_path, extract_list[0])
+    print('   Extracted {} into {}'.format(Fore.GREEN + extracted_file_path + Fore.RESET, Fore.GREEN + output_path + Fore.RESET))
+    return extracted_file_path
 
 def download_extract_db(db_code, token=None, output_path=None):
     try :
@@ -103,4 +104,5 @@ def download_extract_db(db_code, token=None, output_path=None):
     if not file_path:
         return
     output_file_path = unzip_db(file_path, output_path)
+    print(output_file_path)
     return output_file_path

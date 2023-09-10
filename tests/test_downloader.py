@@ -3,9 +3,9 @@ from unittest import TestCase
 from ip2location_toolkit.downloader.download import download_file, download_database, unzip_db, download_extract_db
 from ip2location_toolkit.downloader.download import get_dir_or_create, get_tmp_dir, get_downloaded_zip_path
 from ip2location_toolkit.exceptions import DataBaseNotFound, DownloadLimitExceeded, DownloadPermissionDenied
-import os, io, sys
+import os, io, sys, zipfile
 
-from utils import VALID_TOKEN, INVALID_TOKEN_SHORT, INVALID_TOKEN_LONG
+from .utils import VALID_TOKEN, INVALID_TOKEN_SHORT, INVALID_TOKEN_LONG
 
 
 mocked_404_response = MagicMock(status_code=404)
@@ -86,3 +86,69 @@ class TestDownloadDatabase(SilentTestCases):
     def test_download_file_failed(self, mocker):
         file = download_database('DB1LITEBIN', VALID_TOKEN)
         self.assertIsNone(file, msg="The function should return None if the download_file function failed.")
+
+
+class TestUnzipDB(SilentTestCases):
+    def create_zip_file(self):
+
+        self.zipfile_name = self.file_name.split('.')[0] + '.zip'
+        self.zipfile_path = os.path.join(os.getcwd(), self.zipfile_name)
+
+        # create a file and zip it
+        with open(self.file_name, 'w') as f:
+            f.write('This is a test file.')
+
+        with zipfile.ZipFile(self.zipfile_name, 'w') as zip_file:
+            zip_file.write(self.file_name)
+
+        self.assertTrue(os.path.exists(self.zipfile_name), msg="The zip file should exist.")
+
+    def setUp(self):
+        self.file_name = 'test_file.bin'
+        self.output_dir = 'unzipped'
+        self.create_zip_file()
+        return super().setUp()
+
+    def tearDown(self):
+        if os.path.exists(getattr(self, 'file_name', '')):
+            os.remove(self.file_name)
+        if os.path.exists(getattr(self, 'zipfile_name', '')):
+            os.remove(self.zipfile_name)
+        if os.path.exists(getattr(self, 'output_file_path', '')):
+            os.remove(self.output_file_path)
+        if os.path.exists(getattr(self, 'output_dir', '')):
+            os.rmdir(self.output_dir)
+
+    def test_unzip_db(self):
+        self.output_file_path = unzip_db('test_file.zip', self.output_dir)
+        self.assertTrue(os.path.exists(os.path.join(self.output_dir, self. file_name)), msg="The unzipped file should exist.")
+
+    @patch('ip2location_toolkit.downloader.download.ZipFile.extract', side_effect=zipfile.BadZipFile)
+    def test_failed_unzip(self, mocker):
+        with self.assertRaises(zipfile.BadZipFile, msg="Expected BadZipFile exception to be raised"):
+            unzip_db('test_file.zip', self.output_dir)
+
+class TestDownloadExtractDB(TestCase):
+    def test_invalid_token(self):
+        result = download_extract_db('DB1LITEBIN', INVALID_TOKEN_LONG)
+        self.assertIsNone(result, msg="Expected ValueError Exception to be raised when token is invalid")
+
+    def test_invalid_db_code(self):
+        result = download_extract_db('DB1LITEBINXX', VALID_TOKEN)
+        self.assertIsNone(result, msg="Expected ValueError Exception to be raised when db_code is invalid")
+
+    def test_invalid_path(self):
+        result = download_extract_db('DB1LITEBIN', VALID_TOKEN, 'invalid_path')
+        self.assertIsNone(result, msg="Expected ValueError Exception to be raised when path is invalid")
+
+    @patch('ip2location_toolkit.downloader.download.download_database', return_value='test.zip')
+    @patch('ip2location_toolkit.downloader.download.unzip_db', return_value='hjk')
+    def test_download_extract_db(self, unzip_db_mock, download_database_mock):
+        file = download_extract_db('DB1LITEBIN', VALID_TOKEN)
+        print(file)
+        self.assertEqual(file, 'hjk', msg="The function should return the path to the downloaded zip file.")
+
+    @patch('ip2location_toolkit.downloader.download.download_database', return_value=None)
+    def test_failed_download_database(self, download_database_mock):
+        result = download_extract_db('DB1LITEBIN', VALID_TOKEN)
+        self.assertIsNone(result, msg="The function should return None if the download_database function failed.")
