@@ -9,6 +9,11 @@ from ..validators import token_validator, db_code_validator, path_validator
 
 def get_dir_or_create(path):
     """
+    Check if the given path exists. If it does not exist, create it.
+    @param path - The path to check and create if necessary.
+    @return The path
+    """
+    """
     This function checks if the given path exists and if it does not, it creates it.
     @param path The path to check.
     """
@@ -24,12 +29,25 @@ def get_tmp_dir():
     full_path = os.path.join(os.getcwd(), 'tmp')
     return get_dir_or_create(full_path)
 
-def get_downloaded_zip_path(file_code):
+def get_downloaded_zip_path(db_code):
+    """
+    Given a database code, generate the path where the downloaded zip file should be saved.
+    @param db_code - the code of the file
+    @return The path where the downloaded zip file should be saved
+    """
     tmp_path = get_tmp_dir()
-    file_path  = os.path.join(tmp_path, "{filename}.zip".format(filename=file_code))
+    file_path  = os.path.join(tmp_path, "{filename}.zip".format(filename=db_code))
     return file_path
 
 def download_file(url, path):
+    """
+    Download a file from a given URL and save it to a specified path.
+    @param url - the URL of the file to download
+    @param path - the path where the file will be saved
+    @raises DataBaseNotFound - if the file is not found
+    @raises DownloadPermissionDenied - if permission to download the file is denied
+    @return None
+    """
     request = requests.get(url, stream=True)
     file_length = int(request.headers.get('content-length', 0))
     chunk_size = min(int(file_length / 100), 500000)
@@ -53,27 +71,40 @@ def download_file(url, path):
 
     return path
 
-def download_database(file_code, token=None):
+def download_database(db_code, token):
+    """
+    Download a database file from the IP2Location website using a provided database code and a token for authentication.
+    @param db_code - The code of the database to download.
+    @param token - Token for authentication.
+    @return The downloaded file.
+    """
     try:
         token_validator(token)
     except Exception as e:
         print('Failed to download database. {}'.format(getattr(e, 'message', e)))
         return
 
-    url = "https://www.ip2location.com/download?token={}&file={}".format(token, file_code)
-    file_path = get_downloaded_zip_path(file_code)
-    print('Downloading {}...'.format(Fore.BLUE + file_code + Fore.RESET))
+    url = "https://www.ip2location.com/download?token={}&file={}".format(token, db_code)
+    file_path = get_downloaded_zip_path(db_code)
+    print('Downloading {}...'.format(Fore.BLUE + db_code + Fore.RESET))
 
     try:
         file = download_file(url, file_path)
     except Exception as e:
-        print('   Error downloading {}. \n   {}'.format(Fore.RED + file_code + Fore.RESET, getattr(e, 'message', e)))
+        print('   Error downloading {}. \n   {}'.format(Fore.RED + db_code + Fore.RESET, getattr(e, 'message', e)))
         return
 
-    print('   Downloaded {}.'.format( Fore.GREEN + file_code + Fore.RESET))
+    print('   Downloaded {}.'.format( Fore.GREEN + db_code + Fore.RESET))
     return file
 
 def unzip_db(file_path, output_path=None):
+    """
+    Unzip a database file and extract specific files with extensions `.BIN` or `.CSV` to a specified output path.
+    if no output path is specified, the current directory will be used.
+    @param file_path - the path to the database file
+    @param output_path - the path to extract the files to (optional)
+    @return The path to the extracted file
+    """
     try:
         with ZipFile(file_path, 'r') as zip_ref:
             extract_list = [f for f in zip_ref.namelist() if f.upper().endswith('.BIN') or f.upper().endswith('.CSV')]
@@ -91,7 +122,14 @@ def unzip_db(file_path, output_path=None):
     print('   Extracted {} into {}'.format(Fore.GREEN + extracted_file_path + Fore.RESET, Fore.GREEN + output_path + Fore.RESET))
     return extracted_file_path
 
-def download_extract_db(db_code, token=None, output_path=None):
+def download_extract_db(db_code, token, output_path=None):
+    """
+    Download and extract a database given a database code, a token, and an optional output path.
+    @param db_code - the code of the database to download
+    @param token - token for authentication
+    @param output_path - an optional path to save the downloaded and extracted database
+    @return The path to the downloaded and extracted database
+    """
     try :
         token_validator(token)
         db_code_validator(db_code)
