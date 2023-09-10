@@ -8,6 +8,9 @@ RESET = Fore.RESET
 
 
 def db_code_prompt(enable_select):
+    """
+    Prompt the user to enter a database code. If `enable_select` is `True`, the user can choose to either enter the code manually or select a database from a list. If `enable_select` is `False`, the user must enter the code manually.
+    """
     if enable_select:
         db_code = input("Please Enter The Database code: (Leave blank to select the database from a list) ")
     else:
@@ -25,6 +28,10 @@ def db_code_prompt(enable_select):
     return db_code
 
 def token_prompt():
+    """
+    Prompt the user to enter a token and validate it using the `token_validator` function. If the token is invalid, display an error message and prompt the user again. Once a valid token is entered, return it.
+    @return The validated token
+    """
     token = input("Please Enter Your Token: ")
     try:
         token_validator(token)
@@ -34,6 +41,9 @@ def token_prompt():
     return token
 
 def output_prompt():
+    """
+    Prompt the user to enter the output path. If the user leaves it blank, the current directory will be used as the output path. Validate the entered path using the `path_validator` function. If the entered path is not valid, display an error message and prompt the user again. Return the validated output path.
+    """
     output = input("Please Enter The Output Path: (Leave blank for current directory)")
     try:
         path_validator(output, required=False)
