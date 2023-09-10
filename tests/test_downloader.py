@@ -1,25 +1,16 @@
 from unittest.mock import MagicMock, patch
 from unittest import TestCase
-from ip2location_toolkit.downloader.download import download_file, download_database, unzip_db, download_extract_db
-from ip2location_toolkit.downloader.download import get_dir_or_create, get_tmp_dir, get_downloaded_zip_path
+from ip2location_toolkit.downloader.download import download_file, download_database, unzip_db, download_extract_db, get_dir_or_create, get_tmp_dir, get_downloaded_zip_path
+from ip2location_toolkit.downloader.cli import db_code_prompt, token_prompt, output_prompt
 from ip2location_toolkit.exceptions import DataBaseNotFound, DownloadLimitExceeded, DownloadPermissionDenied
 import os, io, sys, zipfile
 
 from .utils import VALID_TOKEN, INVALID_TOKEN_SHORT, INVALID_TOKEN_LONG
-
+from .utils import SilentTestCases
 
 mocked_404_response = MagicMock(status_code=404)
 mocked_limit_exceeded_response = MagicMock(status_code=200, text='THIS FILE CAN ONLY BE DOWNLOADED')
 mocked_permission_response = MagicMock(status_code=200, text='NO PERMISSION')
-
-
-class SilentTestCases(TestCase):
-    def setUp(self):
-        self.original_stdout = sys.stdout
-        sys.stdout = io.StringIO()
-
-    def tearDown(self):
-        sys.stdout = self.original_stdout
 
 class TestGetDownloadedZipPath(TestCase):
     def test_get_downloaded_zip_path(self):
