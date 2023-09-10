@@ -1,3 +1,14 @@
+
+
+"""
+This module defines custom exception classes for handling errors related to IP2Location databases.
+
+The following exception classes are defined:
+- DataBaseNotFound: Raised when the database being downloaded does not exist on IP2LOCATION.
+- DownloadLimitExceeded: Raised when the download limit set by IP2LOCATION for a database has been exceeded.
+- DownloadPermissionDenied: Raised when a user does not have permission to download a database.
+"""
+
 class DataBaseNotFound(Exception):
     """
     An exception class to handle the case when the database being downloaded does not exist on IP2LOCATION.

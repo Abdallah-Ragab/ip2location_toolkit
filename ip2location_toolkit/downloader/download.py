@@ -10,12 +10,11 @@ from ..validators import token_validator, db_code_validator, path_validator
 def get_dir_or_create(path):
     """
     Check if the given path exists. If it does not exist, create it.
-    @param path - The path to check and create if necessary.
-    @return The path
-    """
-    """
-    This function checks if the given path exists and if it does not, it creates it.
-    @param path The path to check.
+
+    :param path: The path to check and create if necessary.
+    :type path: str
+    :return: The path that was checked or created.
+    :rtype: str
     """
     if not os.path.exists(path):
         os.makedirs(path)
@@ -24,7 +23,9 @@ def get_dir_or_create(path):
 def get_tmp_dir():
     """
     This function returns the path to the temporary directory.
-    @return The path to the temporary directory.
+
+    :return: The path to the temporary directory.
+    :rtype: str
     """
     full_path = os.path.join(os.getcwd(), 'tmp')
     return get_dir_or_create(full_path)
@@ -32,8 +33,11 @@ def get_tmp_dir():
 def get_downloaded_zip_path(db_code):
     """
     Given a database code, generate the path where the downloaded zip file should be saved.
-    @param db_code - the code of the file
-    @return The path where the downloaded zip file should be saved
+
+    :param db_code: The code of the file
+    :type db_code: str
+    :return: The path where the downloaded zip file should be saved
+    :rtype: str
     """
     tmp_path = get_tmp_dir()
     file_path  = os.path.join(tmp_path, "{filename}.zip".format(filename=db_code))
@@ -42,11 +46,15 @@ def get_downloaded_zip_path(db_code):
 def download_file(url, path):
     """
     Download a file from a given URL and save it to a specified path.
-    @param url - the URL of the file to download
-    @param path - the path where the file will be saved
-    @raises DataBaseNotFound - if the file is not found
-    @raises DownloadPermissionDenied - if permission to download the file is denied
-    @return None
+
+    :param url: the URL of the file to download
+    :type url: str
+    :param path: the path where the file will be saved
+    :type path: str
+    :raises DataBaseNotFound: if the file is not found
+    :raises DownloadPermissionDenied: if permission to download the file is denied
+    :return: the path where the file was saved
+    :rtype: str
     """
     request = requests.get(url, stream=True)
     file_length = int(request.headers.get('content-length', 0))
@@ -68,15 +76,19 @@ def download_file(url, path):
             tqdm_bar.update(len(chunk))
             file.write(chunk)
 
-
     return path
 
 def download_database(db_code, token):
     """
     Download a database file from the IP2Location website using a provided database code and a token for authentication.
-    @param db_code - The code of the database to download.
-    @param token - Token for authentication.
-    @return The downloaded file.
+
+    :param db_code: The code of the database to download.
+    :type db_code: str
+    :param token: Token for authentication.
+    :type token: str
+    :return: The downloaded file.
+    :rtype: file
+    :raises Exception: If the token is invalid or if there is an error downloading the file.
     """
     try:
         token_validator(token)
@@ -97,13 +109,23 @@ def download_database(db_code, token):
     print('   Downloaded {}.'.format( Fore.GREEN + db_code + Fore.RESET))
     return file
 
-def unzip_db(file_path, output_path=None):
+import os
+from pathlib import Path
+from zipfile import ZipFile
+from colorama import Fore
+
+def unzip_db(file_path: str, output_path: str = None) -> str:
     """
     Unzip a database file and extract specific files with extensions `.BIN` or `.CSV` to a specified output path.
-    if no output path is specified, the current directory will be used.
-    @param file_path - the path to the database file
-    @param output_path - the path to extract the files to (optional)
-    @return The path to the extracted file
+
+    :param file_path: The path to the database file.
+    :type file_path: str
+
+    :param output_path: The path to extract the files to (optional). If not specified, the current directory will be used.
+    :type output_path: str
+
+    :return: The path to the extracted file.
+    :rtype: str
     """
     try:
         with ZipFile(file_path, 'r') as zip_ref:
@@ -125,10 +147,16 @@ def unzip_db(file_path, output_path=None):
 def download_extract_db(db_code, token, output_path=None):
     """
     Download and extract a database given a database code, a token, and an optional output path.
-    @param db_code - the code of the database to download
-    @param token - token for authentication
-    @param output_path - an optional path to save the downloaded and extracted database
-    @return The path to the downloaded and extracted database
+
+    :param db_code: The code of the database to download.
+    :type db_code: str
+    :param token: Token for authentication.
+    :type token: str
+    :param output_path: An optional path to save the downloaded and extracted database.
+    :type output_path: str
+    :return: The path to the downloaded and extracted database.
+    :rtype: str
+    :raises: Exception: If the token or database code is invalid, or if there is an error downloading or extracting the database.
     """
     try :
         token_validator(token)

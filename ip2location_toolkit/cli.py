@@ -1,21 +1,34 @@
+"""
+This module provides a command-line interface for the IP2Location Toolkit.
+
+It includes functions for downloading and selecting IP2Location databases.
+
+Functions:
+    download: Downloads the IP2Location database file using the specified database code and token.
+    select: Prompts the user to select a database type, content, IP type, and database format.
+"""
+
 from .downloader.download import download_extract_db
 from .downloader.cli import db_code_prompt, token_prompt, output_prompt
 from .selector.cli import selection_input, get_code
 from .db_codes import CODES
 
 
-def download(db_code = None, token = None, output = None, enable_select = True):
+def download(db_code=None, token=None, output=None, enable_select=True):
     """
     Downloads the IP2Location database file using the specified database code and token.
 
-    Args:
-        db_code (str): The database code to download. If not provided, the user will be prompted to select a database.
-        token (str): The token to use for authentication. If not provided, the user will be prompted to enter a token.
-        output (str): The output file path to save the downloaded database file. If not provided, the user will be prompted to enter a file path.
-        enable_select (bool): Whether to enable the database selection prompt. Defaults to True.
+    :param db_code: The database code to download. If not provided, the user will be prompted to select a database.
+    :type db_code: str
+    :param token: The token to use for authentication. If not provided, the user will be prompted to enter a token.
+    :type token: str
+    :param output: The output file path to save the downloaded database file. If not provided, the user will be prompted to enter a file path.
+    :type output: str
+    :param enable_select: Whether to enable the database selection prompt. Defaults to True.
+    :type enable_select: bool
 
-    Returns:
-        None
+    :return: None
+    :rtype: None
     """
     if not db_code:
         db_code = db_code_prompt(enable_select)
@@ -26,13 +39,15 @@ def download(db_code = None, token = None, output = None, enable_select = True):
     download_extract_db(db_code, token, output)
 
 
-def select(enable_download = True):
+def select(enable_download=True):
     """
-    This function prompts the user to select a database type, content, IP type, and database format.
-    It then retrieves the corresponding code for the selected options and prompts the user to download it.
-    If the user chooses to download the code, it calls the download function with the code as an argument.
-    @param enable_download - A boolean value indicating whether to prompt the user to download the code or not. Default is True.
-    @return The database code for the selected options.
+    Prompts the user to select a database type, content, IP type, and database format.
+    Retrieves the corresponding code for the selected options and prompts the user to download it.
+
+    :param enable_download: A boolean value indicating whether to prompt the user to download the code or not. Default is True.
+    :type enable_download: bool
+    :return: The database code for the selected options.
+    :rtype: str
     """
     db_type_options = CODES.keys()
     db_type = selection_input('Database Type', db_type_options)
@@ -45,7 +60,6 @@ def select(enable_download = True):
 
     db_format_options = CODES[db_type['value']][0][ip_type['value']].keys()
     db_format = selection_input('Database Format', db_format_options)
-
 
     db_code = get_code(db_type['value'], db_content['value'], ip_type['value'], db_format['value'])
     if enable_download:
