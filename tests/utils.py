@@ -1,6 +1,6 @@
 from random import choice
 from unittest import TestCase
-
+import io, sys
 
 def random_token(length=64):
     chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
