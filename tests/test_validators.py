@@ -72,3 +72,18 @@ class TestTokenValidator(TestCase):
         result = token_validator(token)
         self.assertEqual(result, token, msg='The token should be returned if it is 64 characters long')
 
+class TestDbCodeValidator(TestCase):
+    def test_db_code_empty(self):
+        db_code = ''
+        with self.assertRaises(ValueError, msg='Valid db_code should raise ValueError if the db_code is empty'):
+            db_code_validator(db_code)
+
+    def test_db_code_not_in_all_db_codes(self):
+        db_code = 'DB1'
+        with self.assertRaises(ValueError, msg='Valid db_code should raise ValueError if the db_code is not in all_db_codes'):
+            db_code_validator(db_code)
+
+    def test_db_code_in_all_db_codes(self):
+        db_code = get_all_db_codes()[0]
+        result = db_code_validator(db_code)
+        self.assertEqual(result, db_code, msg='The db_code should be returned if it is in all_db_codes')
