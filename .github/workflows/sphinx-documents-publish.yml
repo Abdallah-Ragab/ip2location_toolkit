@@ -4,6 +4,9 @@ name: Deploy Sphinx documentation to Pages
 on:
   release:
     types: [published]
+  workflow_dispatch:
+  workflow_run:
+    workflows: python-publish
 
 jobs:
   pages:
