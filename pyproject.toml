@@ -1,0 +1,25 @@
+    [build-system]
+    requires = ["setuptools>=42", "wheel"]
+    build-backend = "setuptools.build_meta"
+
+    [tool.poetry]
+    name = "ip2location_toolkit"
+    version = "0.0.1"
+    description = "IP2Location Toolkit Allows User To Easily Download IP2Location and IP2Proxy Databases."
+    authors = [{ name = "Abdallah Ragab", email = "abdallahsamehragab1@gmail.com" }]
+    license = "MIT"
+    homepage = "https://github.com/Abdallah-Ragab/ip2location_toolkit"
+    repository = "https://github.com/Abdallah-Ragab/ip2location_toolkit.git"
+
+    [tool.poetry.dependencies]
+    python = "^3.0"
+    requests = "^2.0"
+    tqdm = "^4.0"
+    colorama = "^0.4"
+
+    [tool.poetry.dev-dependencies]
+    sphinx = "^7.0"
+    sphinx-rtd-theme = "^1.0"
+
+    [tool.poetry.scripts]
+    ip2location-toolkit = "ip2location_toolkit:run"
