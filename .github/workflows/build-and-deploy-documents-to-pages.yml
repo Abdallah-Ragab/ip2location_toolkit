@@ -32,7 +32,6 @@ jobs:
         python-version: '3.x'
     - name: Add permissions
       run: |
-        chmod -c -R +rX "docs"
         git update-index --chmod=+x ./docs/make.bat
     - name: Install dependencies
       run: |
