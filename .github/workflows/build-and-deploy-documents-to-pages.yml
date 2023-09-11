@@ -33,6 +33,7 @@ jobs:
     - name: Add permissions
       run: |
         chmod -c -R +rX "docs"
+        git update-index --chmod=+x ./docs/make.bat
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
