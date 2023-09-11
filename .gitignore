@@ -12,7 +12,7 @@ tmp/
 
 
 #docs
-docs/
+docs/_build
 
 # Distribution / packaging
 .Python
