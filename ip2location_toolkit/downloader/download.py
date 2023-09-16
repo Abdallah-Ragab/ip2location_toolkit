@@ -141,8 +141,8 @@ def unzip_db(file_path: str, output_path: str = None) -> str:
         output_path = os.path.abspath(Path.cwd())
 
     extracted_file_path = os.path.join(output_path, extract_list[0])
-    print('   Extracted {} into {}'.format(Fore.GREEN + extracted_file_path + Fore.RESET, Fore.GREEN + output_path + Fore.RESET))
-    return extracted_file_path
+    print('   Extracted {} into {}'.format(Fore.GREEN + str(extracted_file_path) + Fore.RESET, Fore.GREEN + str(output_path) + Fore.RESET))
+    return str(extracted_file_path)
 
 def download_extract_db(db_code, token, output_path=None):
     """
