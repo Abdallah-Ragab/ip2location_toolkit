@@ -200,4 +200,6 @@ def download_extract_db(db_code, token, output_path=None):
     if not file_path:
         return
     output_file_path = unzip_db(file_path, output_path)
+    if output_file_path:
+        output_file_path = rename_file(output_file_path, db_code + '.BIN')
     return output_file_path

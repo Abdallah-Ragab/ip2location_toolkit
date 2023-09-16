@@ -133,12 +133,12 @@ class TestDownloadExtractDB(SilentTestCase):
         result = download_extract_db('DB1LITEBIN', VALID_TOKEN, 'invalid_path')
         self.assertIsNone(result, msg="Expected ValueError Exception to be raised when path is invalid")
 
+    @patch('ip2location_toolkit.downloader.download.rename_file', return_value='file.bin')
     @patch('ip2location_toolkit.downloader.download.download_database', return_value='test.zip')
-    @patch('ip2location_toolkit.downloader.download.unzip_db', return_value='hjk')
-    def test_download_extract_db(self, unzip_db_mock, download_database_mock):
+    @patch('ip2location_toolkit.downloader.download.unzip_db', return_value='test.bin')
+    def test_download_extract_db(self, unzip_db_mock, download_database_mock, rename_mock):
         file = download_extract_db('DB1LITEBIN', VALID_TOKEN)
-        print(file)
-        self.assertEqual(file, 'hjk', msg="The function should return the path to the downloaded zip file.")
+        self.assertEqual(file, 'file.bin', msg="The function should return the path to the downloaded zip file.")
 
     @patch('ip2location_toolkit.downloader.download.download_database', return_value=None)
     def test_failed_download_database(self, download_database_mock):
