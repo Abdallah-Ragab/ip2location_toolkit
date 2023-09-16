@@ -109,10 +109,6 @@ def download_database(db_code, token):
     print('   Downloaded {}.'.format( Fore.GREEN + db_code + Fore.RESET))
     return file
 
-import os
-from pathlib import Path
-from zipfile import ZipFile
-from colorama import Fore
 
 def unzip_db(file_path: str, output_path: str = None) -> str:
     """
