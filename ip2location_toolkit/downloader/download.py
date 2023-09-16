@@ -122,6 +122,10 @@ def rename_file(file_path: str | Path, new_file_name: str) -> Path:
     :raises ValueError: If the file does not exist or the path is not a file.
     :raises Exception: If an error occurs while renaming the file or the file was not renamed.
     """
+    old_file_name = Path(file_path).name
+    if old_file_name == new_file_name:
+        return Path(file_path)
+
     file_exists = Path(file_path).exists()
     if not file_exists:
         raise ValueError('The file does not exist.')
