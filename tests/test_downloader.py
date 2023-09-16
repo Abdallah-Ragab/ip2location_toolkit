@@ -6,18 +6,18 @@ from ip2location_toolkit.exceptions import DataBaseNotFound, DownloadLimitExceed
 import os, io, sys, zipfile
 
 from .utils import VALID_TOKEN, INVALID_TOKEN_SHORT, INVALID_TOKEN_LONG
-from .utils import SilentTestCases
+from .utils import SilentTestCase
 
 mocked_404_response = MagicMock(status_code=404)
 mocked_limit_exceeded_response = MagicMock(status_code=200, text='THIS FILE CAN ONLY BE DOWNLOADED')
 mocked_permission_response = MagicMock(status_code=200, text='NO PERMISSION')
 
-class TestGetDownloadedZipPath(TestCase):
+class TestGetDownloadedZipPath(SilentTestCase):
     def test_get_downloaded_zip_path(self):
         result = get_downloaded_zip_path('DB1LITEBIN')
         self.assertEqual(result, os.path.join(get_tmp_dir(), 'DB1LITEBIN.zip'), msg="The function should return the path to the tmp directory + the file code + .zip.")
 
-class TestGetDirOrCreate(TestCase):
+class TestGetDirOrCreate(SilentTestCase):
     def test_existing_dir(self):
         test_dir = 'test_dir'
         os.mkdir(test_dir)
@@ -33,13 +33,13 @@ class TestGetDirOrCreate(TestCase):
         self.assertEqual(result, test_dir)
         os.rmdir(test_dir)
 
-class TestGetTMPDir(TestCase):
+class TestGetTMPDir(SilentTestCase):
     def test_tmp_dir(self):
         result = get_tmp_dir()
         self.assertTrue(os.path.exists(result), msg="The tmp directory should exist.")
         self.assertEqual(result, os.path.join(os.getcwd(), 'tmp'), msg="The function should return the path to the tmp directory. The path should be the same as the current working directory + tmp.")
 
-class TestDownloadFile(SilentTestCases):
+class TestDownloadFile(SilentTestCase):
     @patch('ip2location_toolkit.downloader.download.requests.get', return_value=mocked_404_response)
     def test_404_response(self, mocker):
         with self.assertRaises(DataBaseNotFound, msg="Expected DataBaseNotFound exception to be raised"):
@@ -63,7 +63,7 @@ class TestDownloadFile(SilentTestCases):
         self.assertTrue(os.path.exists(file), msg="The downloaded zip file should exist.")
         os.remove(file)
 
-class TestDownloadDatabase(SilentTestCases):
+class TestDownloadDatabase(SilentTestCase):
 
     def test_invalid_token(self):
         self.assertIsNone(download_database('DB1LITEBIN', INVALID_TOKEN_LONG), msg="Expected None to be returned for invalid token.")
@@ -79,7 +79,7 @@ class TestDownloadDatabase(SilentTestCases):
         self.assertIsNone(file, msg="The function should return None if the download_file function failed.")
 
 
-class TestUnzipDB(SilentTestCases):
+class TestUnzipDB(SilentTestCase):
     def create_zip_file(self):
 
         self.zipfile_name = self.file_name.split('.')[0] + '.zip'
@@ -119,7 +119,7 @@ class TestUnzipDB(SilentTestCases):
         with self.assertRaises(zipfile.BadZipFile, msg="Expected BadZipFile exception to be raised"):
             unzip_db('test_file.zip', self.output_dir)
 
-class TestDownloadExtractDB(TestCase):
+class TestDownloadExtractDB(SilentTestCase):
     def test_invalid_token(self):
         result = download_extract_db('DB1LITEBIN', INVALID_TOKEN_LONG)
         self.assertIsNone(result, msg="Expected ValueError Exception to be raised when token is invalid")

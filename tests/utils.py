@@ -15,7 +15,7 @@ VALID_TOKEN         = random_token(64)    # 64 characters
 INVALID_TOKEN_SHORT = random_token(63)    # 63 characters
 INVALID_TOKEN_LONG  = random_token(65)    # 65 characters
 
-class SilentTestCases(TestCase):
+class SilentTestCase(TestCase):
     """
     A test case class for testing code that produces silent output. It redirects the standard output to a string buffer during the test setup and restores it to the original standard output during the test teardown.
     This allows for testing code that does not produce any visible output.
