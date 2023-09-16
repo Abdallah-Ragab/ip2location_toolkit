@@ -44,20 +44,20 @@ def path_validator(path, required=True):
 
     if path is None:
         if required:
-            raise ValueError('Output path is required.')
+            raise ValueError('path is required.')
         return None
 
     try:
         path = str(path)
     except Exception as e:
-        raise ValueError('Output path must be a string. you provided {}'.format(type(path)))
+        raise ValueError('path must be a string. you provided {}'.format(type(path)))
 
     if not bool(str(path).strip()):
         if required:
-            raise ValueError('Output path is required.')
+            raise ValueError('path is required.')
     else:
         if not os.path.exists(path):
-            raise ValueError('Output path does not exist.')
+            raise ValueError('path does not exist.')
     return original_path
 
 def token_validator(token):
