@@ -109,6 +109,36 @@ def download_database(db_code, token):
     print('   Downloaded {}.'.format( Fore.GREEN + db_code + Fore.RESET))
     return file
 
+def rename_file(file_path: str | Path, new_file_name: str) -> Path:
+    """
+    Rename a file at the given file path to the new file name.
+
+    :param file_path: The path to the file to be renamed.
+    :type file_path: str or Path
+    :param new_file_name: The new name for the file.
+    :type new_file_name: str
+    :return: The new file path.
+    :rtype: Path
+    :raises ValueError: If the file does not exist or the path is not a file.
+    :raises Exception: If an error occurs while renaming the file or the file was not renamed.
+    """
+    file_exists = Path(file_path).exists()
+    if not file_exists:
+        raise ValueError('The file does not exist.')
+    is_file = Path(file_path).is_file()
+    if not is_file:
+        raise ValueError('The path is not a file.')
+
+    file_dir = Path(file_path).parent
+    try:
+        Path(file_path).rename(Path(file_dir) / new_file_name)
+    except Exception as e:
+        raise Exception(f'An error occurred while renaming the file: {str(e)}')
+    new_file_path = Path(file_dir) / new_file_name
+    new_file_exists = new_file_path.exists()
+    if not new_file_exists:
+        raise Exception('The file was not renamed.')
+    return new_file_path
 
 def unzip_db(file_path: str, output_path: str = None) -> str:
     """
