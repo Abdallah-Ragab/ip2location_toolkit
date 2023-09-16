@@ -6,7 +6,7 @@ from ip2location_toolkit.exceptions import DataBaseNotFound, DownloadLimitExceed
 import os, io, sys, zipfile
 
 from .utils import VALID_TOKEN, INVALID_TOKEN_SHORT, INVALID_TOKEN_LONG
-from .utils import SilentTestCase
+from .utils import SilentTestCase, SilentTqdm
 
 mocked_404_response = MagicMock(status_code=404)
 mocked_limit_exceeded_response = MagicMock(status_code=200, text='THIS FILE CAN ONLY BE DOWNLOADED')
@@ -56,6 +56,7 @@ class TestDownloadFile(SilentTestCase):
         with self.assertRaises(DownloadPermissionDenied, msg="Expected DownloadPermissionDenied exception to be raised"):
             download_file('https://www.ip2location.com/download?token=123&file=DB1LITEBIN', 'test.zip')
 
+    @patch('ip2location_toolkit.downloader.download.tqdm', SilentTqdm)
     @patch('ip2location_toolkit.downloader.download.requests.get', return_value=MagicMock(status_code=200, text='test'))
     def test_download_file(self, mocker):
         file = download_file('https://www.ip2location.com/download?token=123&file=DB1LITEBIN', 'test.zip')

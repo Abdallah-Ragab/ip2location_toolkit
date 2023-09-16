@@ -1,6 +1,8 @@
+from functools import partialmethod
 from random import choice
 from unittest import TestCase
 import io, sys
+from tqdm import tqdm
 
 def random_token(length=64):
     """
@@ -37,3 +39,9 @@ class SilentTestCase(TestCase):
         @return None
         """
         sys.stdout = self.original_stdout
+
+
+class SilentTqdm(tqdm):
+    def __init__(self, *args, **kwargs):
+        kwargs['disable'] = True
+        super().__init__(*args, **kwargs)
