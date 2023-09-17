@@ -4,7 +4,7 @@
 
     [ip2location_toolkit]
     name = "ip2location_toolkit"
-    version = "0.0.1"
+    version = "0.1.0"
     description = "IP2Location Toolkit Allows User To Easily Download IP2Location and IP2Proxy Databases."
     authors = [{ name = "Abdallah Ragab", email = "abdallahsamehragab1@gmail.com" }]
     license = "MIT"
