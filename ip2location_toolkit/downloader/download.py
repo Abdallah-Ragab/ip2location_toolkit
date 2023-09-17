@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os, requests
 from pathlib import Path
 from tqdm import tqdm
