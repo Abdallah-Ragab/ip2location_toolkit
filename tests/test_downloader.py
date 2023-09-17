@@ -1,5 +1,4 @@
 from pathlib import Path
-import shutil
 from unittest.mock import MagicMock, patch
 from unittest import TestCase
 from ip2location_toolkit.downloader.download import (
@@ -16,7 +15,7 @@ from ip2location_toolkit.exceptions import DataBaseNotFound, DownloadLimitExceed
 import os, io, sys, zipfile
 
 from .utils import VALID_TOKEN, INVALID_TOKEN_SHORT, INVALID_TOKEN_LONG
-from .utils import SilentTestCase, SilentTqdm
+from .utils import SilentTestCase, SilentTqdm, recursive_remove_dir
 
 mocked_404_response = MagicMock(status_code=404)
 mocked_limit_exceeded_response = MagicMock(status_code=200, text='THIS FILE CAN ONLY BE DOWNLOADED')
@@ -161,7 +160,7 @@ class TestRenameFile(TestCase):
         return super().setUp()
 
     def tearDown(self):
-        shutil.rmtree('/tmp')
+        recursive_remove_dir('/tmp')
         return super().tearDown()
 
     def test_same_filename(self):

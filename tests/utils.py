@@ -2,7 +2,25 @@ from functools import partialmethod
 from random import choice
 from unittest import TestCase
 import io, sys
+from pathlib import Path
 from tqdm import tqdm
+
+
+def recursive_remove_dir(path: Path):
+    """
+    Recursively remove a directory and all its contents.
+    @param path - the path to the directory to remove
+    @return None
+    """
+    if isinstance(path, str):
+        path = Path(path)
+
+    if path.is_dir():
+        for child in path.iterdir():
+            recursive_remove_dir(child)
+        path.rmdir()
+    else:
+        path.unlink()
 
 def random_token(length=64):
     """
