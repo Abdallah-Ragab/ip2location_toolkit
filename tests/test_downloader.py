@@ -165,26 +165,26 @@ class TestRenameFile(TestCase):
         return super().tearDown()
 
     def test_same_filename(self):
-        filepath = '/tmp/test_file.bin'
-        new_filename = 'test_file.bin'
+        filepath = '/tmp/test_file.xyz'
+        new_filename = 'test_file.xyz'
         result = rename_file(filepath, new_filename)
         self.assertEqual(result, Path(filepath), msg="The rename_file should return the same path to the file when the new filename is the same as the old one.")
 
     def test_file_not_exist(self):
-        filepath = '/tmp/test_file.bin'
-        new_filename = 'new_test_file.bin'
+        filepath = '/tmp/test_file_unique_4312349545.xyz'
+        new_filename = 'new_test_file.xyz'
         with self.assertRaises(ValueError, msg="Expected ValueError Exception to be raised when file does not exist"):
             rename_file(filepath, new_filename)
 
     def test_path_not_file(self):
         filepath = '/tmp'
-        new_filename = 'new_test_file.bin'
+        new_filename = 'new_test_file.xyz'
         with self.assertRaises(ValueError, msg="Expected ValueError Exception to be raised when path is not a file"):
             rename_file(filepath, new_filename)
 
     def test_rename_file(self):
-        filepath = '/tmp/test_file.bin'
-        new_filename = 'new_test_file.bin'
+        filepath = '/tmp/test_file.xyz'
+        new_filename = 'new_test_file.xyz'
         new_filepath = Path(filepath).parent / new_filename
         Path(filepath).touch()
         result = rename_file(filepath, new_filename)
@@ -192,8 +192,8 @@ class TestRenameFile(TestCase):
         self.assertTrue(result.exists(), msg="The renamed file should exist.")
 
     def test_failed_rename_file(self):
-        filepath = '/tmp/test_file.bin'
-        new_filename = 'new_test_file.bin'
+        filepath = '/tmp/test_file.xyz'
+        new_filename = 'new_test_file.xyz'
         new_filepath = Path(filepath).parent / new_filename
         Path(filepath).touch()
         with patch('ip2location_toolkit.downloader.download.Path.rename', side_effect=Exception):

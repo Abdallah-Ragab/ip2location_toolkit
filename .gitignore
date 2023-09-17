@@ -6,7 +6,7 @@ __pycache__/
 # Temp files
 tmp/
 *.csv
-*.bin
+tmp/*.bin
 # C extensions
 *.so
 
