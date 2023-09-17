@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 long_description = """IP2Location Toolkit Allows User To Easily Download IP2Location and IP2Proxy Databases and Helps The User To Easily Find The Right Database based on the database contents, IP type (IPv4 or IPv6) and Database format."""
 setup(
     name='ip2location_toolkit',
-    version='0.0.1',
+    version='0.1.0',
     description='IP2Location Toolkit Allows User To Easily Download IP2Location and IP2Proxy Databases.',
     long_description=long_description,
     long_description_content_type='text/markdown',
