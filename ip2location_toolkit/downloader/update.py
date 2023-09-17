@@ -65,7 +65,7 @@ def new_version_available(filepath):
         return True
     return False
 
-def update_db(filepath, db_code, token, force):
+def update_db(filepath, db_code, token, force=False):
     """
     Update the IP2Location database file.
 
