@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch
 from .utils import SilentTestCase, VALID_TOKEN
@@ -171,4 +172,4 @@ class TestUpdateDB(SilentTestCase):
         mock_os.path.isfile.return_value = True
         mock_download_extract_db.return_value = 'test/path/new_db.bin'
         result = update_db(filepath, "DB11LITEBIN", VALID_TOKEN, False)
-        self.assertEqual(result, filepath, msg="update_db() should return the filepath if the download is successful")
+        self.assertEqual(result, 'test/path/new_db.bin', msg="update_db() should return the filepath if the download is successful")
