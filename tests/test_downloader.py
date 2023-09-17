@@ -156,7 +156,7 @@ class TestDownloadExtractDB(SilentTestCase):
 
 class TestRenameFile(TestCase):
     def setUp(self) -> None:
-        Path('/__tmp__').mkdir(exist_ok=True)
+        Path('__tmp__').mkdir(exist_ok=True)
         return super().setUp()
 
     def tearDown(self):
@@ -176,13 +176,13 @@ class TestRenameFile(TestCase):
             rename_file(filepath, new_filename)
 
     def test_path_not_file(self):
-        filepath = '/tmp'
+        filepath = '/__tmp__'
         new_filename = 'new_test_file.xyz'
         with self.assertRaises(ValueError, msg="Expected ValueError Exception to be raised when path is not a file"):
             rename_file(filepath, new_filename)
 
     def test_rename_file(self):
-        filepath = '/tmp/test_file.xyz'
+        filepath = '/__tmp__/test_file.xyz'
         new_filename = 'new_test_file.xyz'
         new_filepath = Path(filepath).parent / new_filename
         Path(filepath).touch()
@@ -191,7 +191,7 @@ class TestRenameFile(TestCase):
         self.assertTrue(result.exists(), msg="The renamed file should exist.")
 
     def test_failed_rename_file(self):
-        filepath = '/tmp/test_file.xyz'
+        filepath = '/__tmp__/test_file.xyz'
         new_filename = 'new_test_file.xyz'
         new_filepath = Path(filepath).parent / new_filename
         Path(filepath).touch()
