@@ -4,9 +4,9 @@ __pycache__/
 *$py.class
 
 # Temp files
-tmp/
+__tmp__/
 *.csv
-tmp/*.bin
+__tmp__/*.bin
 # C extensions
 *.so
 

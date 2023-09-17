@@ -28,7 +28,7 @@ def get_tmp_dir():
     :return: The path to the temporary directory.
     :rtype: str
     """
-    full_path = os.path.join(os.getcwd(), 'tmp')
+    full_path = os.path.join(os.getcwd(), '__tmp__')
     return get_dir_or_create(full_path)
 
 def get_downloaded_zip_path(db_code):

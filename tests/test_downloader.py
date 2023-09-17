@@ -24,7 +24,7 @@ mocked_permission_response = MagicMock(status_code=200, text='NO PERMISSION')
 class TestGetDownloadedZipPath(SilentTestCase):
     def test_get_downloaded_zip_path(self):
         result = get_downloaded_zip_path('DB1LITEBIN')
-        self.assertEqual(result, os.path.join(get_tmp_dir(), 'DB1LITEBIN.zip'), msg="The function should return the path to the tmp directory + the file code + .zip.")
+        self.assertEqual(result, os.path.join(get_tmp_dir(), 'DB1LITEBIN.zip'), msg="The function should return the path to the __tmp__ directory + the file code + .zip.")
 
 class TestGetDirOrCreate(SilentTestCase):
     def test_existing_dir(self):
@@ -45,8 +45,8 @@ class TestGetDirOrCreate(SilentTestCase):
 class TestGetTMPDir(SilentTestCase):
     def test_tmp_dir(self):
         result = get_tmp_dir()
-        self.assertTrue(os.path.exists(result), msg="The tmp directory should exist.")
-        self.assertEqual(result, os.path.join(os.getcwd(), 'tmp'), msg="The function should return the path to the tmp directory. The path should be the same as the current working directory + tmp.")
+        self.assertTrue(os.path.exists(result), msg="The __tmp__ directory should exist.")
+        self.assertEqual(result, os.path.join(os.getcwd(), '__tmp__'), msg="The function should return the path to the __tmp__ directory. The path should be the same as the current working directory + __tmp__.")
 
 class TestDownloadFile(SilentTestCase):
     @patch('ip2location_toolkit.downloader.download.requests.get', return_value=mocked_404_response)
@@ -156,21 +156,21 @@ class TestDownloadExtractDB(SilentTestCase):
 
 class TestRenameFile(TestCase):
     def setUp(self) -> None:
-        Path('/tmp').mkdir(exist_ok=True)
+        Path('/__tmp__').mkdir(exist_ok=True)
         return super().setUp()
 
     def tearDown(self):
-        recursive_remove_dir('/tmp')
+        recursive_remove_dir('/__tmp__')
         return super().tearDown()
 
     def test_same_filename(self):
-        filepath = '/tmp/test_file.xyz'
+        filepath = '/__tmp__/test_file.xyz'
         new_filename = 'test_file.xyz'
         result = rename_file(filepath, new_filename)
         self.assertEqual(result, Path(filepath), msg="The rename_file should return the same path to the file when the new filename is the same as the old one.")
 
     def test_file_not_exist(self):
-        filepath = '/tmp/test_file_unique_4312349545.xyz'
+        filepath = '/__tmp__/test_file_unique_4312349545.xyz'
         new_filename = 'new_test_file.xyz'
         with self.assertRaises(ValueError, msg="Expected ValueError Exception to be raised when file does not exist"):
             rename_file(filepath, new_filename)
