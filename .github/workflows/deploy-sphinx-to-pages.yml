@@ -1,4 +1,4 @@
-name: Deploy Sphinx documentation to Pages 2.0
+name: Deploy Sphinx documentation to Pages
 
 
 on:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   workflow_run:
     workflows: python-publish
-    
+
 jobs:
   build:
     name: Push Sphinx Pages
