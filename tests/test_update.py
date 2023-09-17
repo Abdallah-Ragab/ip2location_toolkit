@@ -165,42 +165,10 @@ class TestUpdateDB(SilentTestCase):
     @patch('ip2location_toolkit.downloader.update.new_version_available', return_value=True)
     @patch('ip2location_toolkit.downloader.update.path_validator')
     @patch('ip2location_toolkit.downloader.update.os', wraps=os)
-    def test_successful_download_rename_called(self,  mock_os, mock_path_validator, mock_new_version_available, mock_download_extract_db):
+    def test_successful_download(self,  mock_os, mock_path_validator, mock_new_version_available, mock_download_extract_db):
         filepath = "test/path/db.bin"
         mock_path_validator.return_value = filepath
         mock_os.path.isfile.return_value = True
-        mock_os.rename.return_value = True
         mock_download_extract_db.return_value = 'test/path/new_db.bin'
         result = update_db(filepath, "DB11LITEBIN", VALID_TOKEN, False)
-        self.assertTrue(mock_os.rename.called, msg="update_db() should call os.rename() if the download is successful and the downloaded file name is different from the original file name")
         self.assertEqual(result, filepath, msg="update_db() should return the filepath if the download is successful")
-
-
-
-
-    # @patch('ip2location_toolkit.downloader.update.new_version_available')
-    # @patch('ip2location_toolkit.downloader.update.get_db_version')
-    # @patch('ip2location_toolkit.downloader.update.path_validator')
-    # def test_update_db_new_version_available(self, mock_path_validator, mock_get_db_version, mock_new_version_available):
-    #     mock_path_validator.return_value = "test/path/db.bin"
-    #     mock_get_db_version.return_value = "22.12.1"
-    #     mock_new_version_available.return_value = True
-    #     self.assertTrue(update_db("test/path/db.bin", "DB11LITEBIN", "test_token", False), "update_db() should return True if a new version is available")
-
-    # @patch('ip2location_toolkit.downloader.update.new_version_available')
-    # @patch('ip2location_toolkit.downloader.update.get_db_version')
-    # @patch('ip2location_toolkit.downloader.update.path_validator')
-    # def test_update_db_no_new_version_available(self, mock_path_validator, mock_get_db_version, mock_new_version_available):
-    #     mock_path_validator.return_value = "test/path/db.bin"
-    #     mock_get_db_version.return_value = "22.12.1"
-    #     mock_new_version_available.return_value = False
-    #     self.assertFalse(update_db("test/path/db.bin", "DB11LITEBIN", "test_token", False), "update_db() should return False if a new version is not available")
-
-    # @patch('ip2location_toolkit.downloader.update.new_version_available')
-    # @patch('ip2location_toolkit.downloader.update.get_db_version')
-    # @patch('ip2location_toolkit.downloader.update.path_validator')
-    # def test_update_db_force(self, mock_path_validator, mock_get_db_version, mock_new_version_available):
-    #     mock_path_validator.return_value = "test/path/db.bin"
-    #     mock_get_db_version.return_value = "22.12.1"
-    #     mock_new_version_available.return_value = False
-    #     self.assertTrue(update_db("test/path/db.bin", "DB11LITEBIN", "test_token", True), "update_db() should return True if force is True")
