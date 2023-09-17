@@ -102,10 +102,6 @@ def update_db(filepath, db_code, token, force):
         output_filepath = download_extract_db(db_code, token, dirname)
         if not output_filepath:
             raise ValueError("An error occurred while downloading the database file")
-        new_filename = os.path.basename(output_filepath)
-        if new_filename != filename:
-            os.rename(output_filepath, filepath)
-            output_filepath = filepath
 
         return output_filepath
     except ValueError as e:
