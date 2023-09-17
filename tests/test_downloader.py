@@ -1,7 +1,17 @@
+from pathlib import Path
+import shutil
 from unittest.mock import MagicMock, patch
 from unittest import TestCase
-from ip2location_toolkit.downloader.download import download_file, download_database, unzip_db, download_extract_db, get_dir_or_create, get_tmp_dir, get_downloaded_zip_path
-from ip2location_toolkit.downloader.cli import db_code_prompt, token_prompt, output_prompt
+from ip2location_toolkit.downloader.download import (
+    download_database,
+    download_extract_db,
+    download_file,
+    get_dir_or_create,
+    get_downloaded_zip_path,
+    get_tmp_dir,
+    rename_file,
+    unzip_db,
+)
 from ip2location_toolkit.exceptions import DataBaseNotFound, DownloadLimitExceeded, DownloadPermissionDenied
 import os, io, sys, zipfile
 
@@ -144,3 +154,49 @@ class TestDownloadExtractDB(SilentTestCase):
     def test_failed_download_database(self, download_database_mock):
         result = download_extract_db('DB1LITEBIN', VALID_TOKEN)
         self.assertIsNone(result, msg="The function should return None if the download_database function failed.")
+
+class TestRenameFile(TestCase):
+    def setUp(self) -> None:
+        Path('/tmp').mkdir(exist_ok=True)
+        return super().setUp()
+
+    def tearDown(self):
+        shutil.rmtree('/tmp')
+        return super().tearDown()
+
+    def test_same_filename(self):
+        filepath = '/tmp/test_file.bin'
+        new_filename = 'test_file.bin'
+        result = rename_file(filepath, new_filename)
+        self.assertEqual(result, Path(filepath), msg="The rename_file should return the same path to the file when the new filename is the same as the old one.")
+
+    def test_file_not_exist(self):
+        filepath = '/tmp/test_file.bin'
+        new_filename = 'new_test_file.bin'
+        with self.assertRaises(ValueError, msg="Expected ValueError Exception to be raised when file does not exist"):
+            rename_file(filepath, new_filename)
+
+    def test_path_not_file(self):
+        filepath = '/tmp'
+        new_filename = 'new_test_file.bin'
+        with self.assertRaises(ValueError, msg="Expected ValueError Exception to be raised when path is not a file"):
+            rename_file(filepath, new_filename)
+
+    def test_rename_file(self):
+        filepath = '/tmp/test_file.bin'
+        new_filename = 'new_test_file.bin'
+        new_filepath = Path(filepath).parent / new_filename
+        Path(filepath).touch()
+        result = rename_file(filepath, new_filename)
+        self.assertEqual(result, new_filepath, msg="The rename_file should return the new path to the file.")
+        self.assertTrue(result.exists(), msg="The renamed file should exist.")
+
+    def test_failed_rename_file(self):
+        filepath = '/tmp/test_file.bin'
+        new_filename = 'new_test_file.bin'
+        new_filepath = Path(filepath).parent / new_filename
+        Path(filepath).touch()
+        with patch('ip2location_toolkit.downloader.download.Path.rename', side_effect=Exception):
+            with self.assertRaises(Exception, msg="Expected Exception to be raised when renaming file failed"):
+                rename_file(filepath, new_filename)
+        self.assertFalse(new_filepath.exists(), msg="The renamed file should not exist.")
